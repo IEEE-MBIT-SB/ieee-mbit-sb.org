@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Users } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,38 +12,40 @@ interface ExecomMember {
   academic_year: string;
 }
 
-/* 🔝 HIERARCHY ORDER */
+/* SECTION ORDER */
 const sectionOrder = [
-  "Branch Counsellor",
+  "Branch Counselor",
   "IEEE Student Branch",
   "Computer Society",
   "WIE",
   "Design",
   "Social Media",
   "Photography",
-  "Documentation"
+  "Documentation",
 ];
 
-/* 📝 SECTION DESCRIPTIONS */
+/* SECTION DESCRIPTIONS */
 const sectionDescriptions: Record<string, string> = {
-  "Branch Counsellor":
-    "The Branch Counsellor provides guidance, mentorship, and oversight to ensure alignment with IEEE policies and academic excellence.",
+  "Branch Counselor":
+    "The Branch Counselor provides guidance, mentorship, and oversight to ensure alignment with IEEE policies and academic excellence.",
   "IEEE Student Branch":
     "The core leadership team guiding the student branch operations and activities.",
   "Computer Society":
     "Dedicated to advancing the theory and practice of computer science and engineering.",
-  "WIE":
-    "Women in Engineering - Empowering women in technical fields.",
-    "Design":
+  "WIE": "Women in Engineering - Empowering women in technical fields.",
+  "Design":
     "Responsible for all creative assets including posters, banners, and branding materials.",
-  "Photography":
-    "Capturing and documenting IEEE events through professional photography.",
   "Social Media":
     "Managing digital presence, promotions, and online engagement of the student branch.",
-    "Documentation": 
-    "Maintaining records, reports, and official archives of the student branch activities."
-
+  "Photography":
+    "Capturing and documenting IEEE events through professional photography.",
+  "Documentation":
+    "Maintaining records, reports, and official archives of the student branch activities.",
 };
+
+/* IMAGE OPTIMIZATION (FAST + NO CROPPING) */
+const optimizeImage = (url: string) =>
+  `${url}?width=700&quality=60&format=webp`;
 
 const Execom = () => {
   const [members, setMembers] = useState<ExecomMember[]>([]);
@@ -57,98 +58,79 @@ const Execom = () => {
 
   const fetchMembers = async () => {
     setLoading(true);
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("execom")
       .select("*")
       .eq("academic_year", activeYear)
       .order("id");
 
-    if (!error && data) {
-      setMembers(data);
-    }
+    if (data) setMembers(data);
     setLoading(false);
   };
 
   const groupedMembers = sectionOrder.reduce((acc, section) => {
     acc[section] = members.filter(
-  (m) => m.section?.trim().toLowerCase() === section.toLowerCase());
+      (m) => m.section?.trim().toLowerCase() === section.toLowerCase()
+    );
     return acc;
   }, {} as Record<string, ExecomMember[]>);
 
+  let imageIndex = 0;
+
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="py-20 ieee-gradient relative overflow-hidden">
-        <div className="absolute inset-0 bg-ieee-pattern opacity-30" />
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center max-w-3xl mx-auto"
-          >
-            <h1 className="text-4xl md:text-5xl font-heading font-bold text-primary-foreground mb-6">
-              Executive Committee
-            </h1>
-            <p className="text-primary-foreground/80 text-lg">
-              Meet the dedicated team leading IEEE MBIT Student Branch
-            </p>
-          </motion.div>
+      {/* HERO */}
+      <section className="py-20 ieee-gradient text-center text-primary-foreground">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          Executive Committee
+        </h1>
+        <p className="opacity-80 text-lg">
+          Meet the dedicated team leading IEEE MBIT Student Branch
+        </p>
+      </section>
+
+      {/* YEAR SELECTOR */}
+      <section className="py-6 bg-card border-b">
+        <div className="flex justify-center gap-2">
+          {["2024", "2025", "2026"].map((year) => (
+            <button
+              key={year}
+              onClick={() => setActiveYear(year)}
+              className={`px-4 py-2 rounded-md text-sm font-medium ${
+                activeYear === year
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground"
+              }`}
+            >
+              {year}
+            </button>
+          ))}
         </div>
       </section>
 
-      {/* Academic Year Selector */}
-      <section className="py-8 bg-card border-b border-border">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center gap-4">
-            <span className="text-sm font-medium text-muted-foreground">
-              Academic Year:
-            </span>
-            <div className="flex gap-2">
-              {["2024", "2025", "2026"].map((year) => (
-                <button
-                  key={year}
-                  onClick={() => setActiveYear(year)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    activeYear === year
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:bg-accent"
-                  }`}
-                >
-                  {year}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Members by Section */}
+      {/* CONTENT */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           {loading ? (
-            <div className="text-center py-20">
-              <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-muted-foreground mt-4">
-                Loading team members...
-              </p>
-            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-80 rounded-xl bg-muted animate-pulse"
+                />
+              ))}
+            </div>  
           ) : (
             <div className="space-y-20">
-              {sectionOrder.map((section, sectionIndex) => {
+              {sectionOrder.map((section) => {
                 const sectionMembers = groupedMembers[section];
-                if (!sectionMembers || sectionMembers.length === 0) return null;
+                if (!sectionMembers?.length) return null;
 
                 return (
-                  <motion.div
-                    key={section}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: sectionIndex * 0.1 }}
-                  >
-                    {/* Section Header */}
-                    <div className="text-center mb-12">
-                      <span className="inline-block px-4 py-2 bg-accent text-accent-foreground rounded-full text-sm font-medium mb-4">
+                  <div key={section}>
+                    {/* SECTION HEADER */}
+                    <div className="text-center mb-10">
+                      <span className="inline-block px-4 py-2 bg-accent rounded-full text-sm font-medium mb-3">
                         {section}
                       </span>
                       <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -156,90 +138,61 @@ const Execom = () => {
                       </p>
                     </div>
 
-                    {/* 🔝 Branch Counsellor – Single Centered Card */}
-                    {section === "Branch Counsellor" ? (
-                      <div className="flex justify-center">
-                        {sectionMembers.map((member) => (
-                          <motion.div
+                    {/* MEMBERS GRID */}
+                    <div
+                      className={
+                        section === "Branch Counselor"
+                          ? "flex justify-center"
+                          : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                      }
+                    >
+                      {sectionMembers.map((member) => {
+                        const eager = imageIndex++ < 6;
+
+                        return (
+                          <div
                             key={member.id}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            className="bg-card w-72 rounded-2xl overflow-hidden shadow-lg border border-border hover:shadow-xl transition-shadow"
+                            className="bg-card border rounded-2xl overflow-hidden shadow"
                           >
-                            <div className="aspect-square bg-muted relative overflow-hidden">
-                              {member.photo_path ? (
-                                <img
-                                  src={member.photo_path}
-                                  alt={member.name}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent">
-                                  <Users className="w-16 h-16 text-primary/50" />
-                                </div>
-                              )}
-                            </div>
+                           {/* IMAGE */}
+<div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
+  {member.photo_path ? (
+    <img
+      src={optimizeImage(member.photo_path)}
+      alt={member.name}
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+      className="
+        absolute inset-0
+        w-full h-full
+        object-cover
+        object-[center_20%]
+        scale-[1.08]
+      "
+    />
+  ) : (
+    <div className="absolute inset-0 flex items-center justify-center">
+      <Users className="w-14 h-14 text-muted-foreground" />
+    </div>
+  )}
+</div>
+
+
+
+                            {/* TEXT */}
                             <div className="p-4 text-center">
-                              <h3 className="font-medium text-foreground">
-                                {member.name}
-                              </h3>
-                              <p className="text-sm text-primary font-medium">
+                              <h3 className="font-medium">{member.name}</h3>
+                              <p className="text-sm text-primary">
                                 {member.role}
                               </p>
                             </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    ) : (
-                      /* 🔽 Other Sections – Normal Grid */
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {sectionMembers.map((member, index) => (
-                          <motion.div
-                            key={member.id}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.05 }}
-                            className="bg-card rounded-2xl overflow-hidden shadow-lg border border-border group hover:shadow-xl transition-shadow"
-                          >
-                            <div className="aspect-square bg-muted relative overflow-hidden">
-                              {member.photo_path ? (
-                                <img
-                                  src={member.photo_path}
-                                  alt={member.name}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent">
-                                  <Users className="w-16 h-16 text-primary/50" />
-                                </div>
-                              )}
-                            </div>
-                            <div className="p-4 text-center">
-                              <h3 className="font-medium text-foreground">
-                                {member.name}
-                              </h3>
-                              <p className="text-sm text-primary font-medium">
-                                {member.role}
-                              </p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    )}
-                  </motion.div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 );
               })}
-
-              {members.length === 0 && !loading && (
-                <div className="text-center py-20">
-                  <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">
-                    No team members found for {activeYear}
-                  </p>
-                </div>
-              )}
             </div>
           )}
         </div>
