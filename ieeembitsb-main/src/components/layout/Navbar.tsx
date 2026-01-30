@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ieeeLogo from "../../../assets/ieee_mbit_logo.png";
+
 
 
 
@@ -13,6 +13,7 @@ const navLinks = [
   { name: "Executive Committee", path: "/execom" },
   { name: "Events", path: "/events" },
   { name: "Gallery", path: "/gallery" },
+  { name: "Achievements", path: "/achievements" },
   { name: "Contact", path: "/contact" },
 ];
 
@@ -48,10 +49,12 @@ export const Navbar = () => {
           {/* Logo */}
          <Link to="/" className="flex items-center gap-3">
   <img
-    src="/ieee_mbit_logo.jpg"
-    alt="IEEE MBIT Student Branch"
-    className="h-10 sm:h-12 w-auto object-contain"
-  />
+  src="/mbit-ieee-logo.png"
+  alt="IEEE MBIT Student Branch"
+  className="h-10 sm:h-12 w-auto object-contain"
+/>
+
+
   <div className="hidden sm:block">
     <p className="font-heading font-bold text-foreground text-lg">
        MBIT IEEE

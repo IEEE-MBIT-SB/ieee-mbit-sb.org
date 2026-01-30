@@ -11,8 +11,11 @@ import About from "./pages/About";
 import Execom from "./pages/Execom";
 import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
+import Achievements from "./pages/Achievements";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import Hero from "./pages/Hero";
+
 
 const queryClient = new QueryClient();
 
@@ -23,7 +26,7 @@ const App = () => (
       <Sonner />
 
       <BrowserRouter>
-        {/* 👇 THIS IS THE KEY FIX */}
+       
         <ScrollToTop />
 
         <Routes>
@@ -32,7 +35,9 @@ const App = () => (
           <Route path="/execom" element={<Execom />} />
           <Route path="/events" element={<Events />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/achievements" element={<Achievements />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/Hero" element={<Hero />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

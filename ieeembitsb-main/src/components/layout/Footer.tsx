@@ -12,30 +12,34 @@ export const Footer = () => {
 
   return (
     <footer className="bg-foreground text-background">
+      {/* 
+        Website Designed & Developed by Neel Navdiwala
+        © {currentYear} – Unauthorized removal or modification of this credit is prohibited.
+      */}
+
       {/* Main Footer */}
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
 
-         {/* Brand */}
-<div className="space-y-4">
-  <div className="flex items-center gap-3">
-    <img
-      src="/ieee_mbit_logo.jpg"
-      alt="IEEE MBIT Student Branch"
-      className="h-12 w-auto object-contain"
-    />
-    <div>
-      <p className="font-heading font-bold text-lg">IEEE MBIT</p>
-      <p className="text-xs text-muted-foreground">Student Branch</p>
-    </div>
-  </div>
+          {/* Brand */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <img
+                src="/logo_ieee.jpeg"
+                alt="IEEE MBIT Student Branch"
+                className="h-12 w-auto object-contain"
+              />
+              <div>
+                <p className="font-heading font-bold text-lg">IEEE MBIT</p>
+                <p className="font-heading font-bold text-lg">Student Branch</p>
+              </div>
+            </div>
 
-  <p className="text-sm text-muted-foreground leading-relaxed">
-    Advancing Technology for Humanity. IEEE MBIT Student Branch is dedicated to
-    fostering technical excellence, innovation, and professional development among students.
-  </p>
-</div>
-
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Advancing Technology for Humanity. IEEE MBIT Student Branch is dedicated to
+              fostering technical excellence, innovation, and professional development among students.
+            </p>
+          </div>
 
           {/* Quick Links */}
           <div>
@@ -46,6 +50,7 @@ export const Footer = () => {
                 { name: "Executive Committee", path: "/execom" },
                 { name: "Events", path: "/events" },
                 { name: "Gallery", path: "/gallery" },
+                { name: "Achievements", path: "/Achievements"},
                 { name: "Contact Us", path: "/contact" },
               ].map((link) => (
                 <li key={link.path}>
@@ -67,7 +72,7 @@ export const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                 <span className="text-sm text-muted-foreground">
-                  Madhuben & Bhanubhai Patel Institute of Technology (MBIT),  
+                  Madhuben & Bhanubhai Patel Institute of Technology (MBIT),
                   Near Vithal Udyognagar, Anand, Gujarat – 388120, India
                 </span>
               </li>
@@ -126,11 +131,26 @@ export const Footer = () => {
       {/* Bottom Bar */}
       <div className="border-t border-muted/20">
         <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground text-center">
-            <p>© {currentYear} IEEE MBIT Student Branch. All rights reserved.</p>
-            <p>
-              IEEE is the world’s largest technical professional organization dedicated to advancing technology for the benefit of humanity.
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
+
+            <p className="text-sm text-muted-foreground">
+              © {currentYear} IEEE MBIT Student Branch. All rights reserved.
             </p>
+
+            <p className="text-xs text-muted-foreground opacity-70 select-none">
+              Designed & Developed by{" "}
+              <span className="font-medium text-primary">
+                <a
+                href="https://www.linkedin.com/in/NeelNavdiwala"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-primary hover:underline"
+              >
+                Neel Navdiwala
+                </a>
+              </span>
+            </p>
+
           </div>
         </div>
       </div>
